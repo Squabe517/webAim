@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 
 let FOV = 75;
 let aspectRatio = window.innerWidth / window.innerHeight;
@@ -13,6 +15,12 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Create a Controller
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enabled = true;
+controls.minDistance = 700;
+controls.maxDistance = 3000;
+
 // Add Skybox
 let skyboxImage = 'corona';
 function createSkyBox(skyboxImage) {
@@ -23,18 +31,11 @@ function createSkyBox(skyboxImage) {
 const SkyBox = createSkyBox(skyboxImage);
 scene.add(SkyBox);
 
-// Create a Sphere
-const sphereMesh = new THREE.SphereGeometry(1);
-const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const sphere = new THREE.Mesh(sphereMesh, sphereMaterial);
-scene.add(sphere);
-
-camera.position.z = 5;
-
 // Render the Scene
 const animate = function () {
-    requestAnimationFrame(animate);
+    controls.update();
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 };
 animate();
 
